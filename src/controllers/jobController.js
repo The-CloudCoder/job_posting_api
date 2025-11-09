@@ -1,7 +1,7 @@
-const { validationResult } = require('express-validator');
-const Job = require('../models/Job');
+import { validationResult } from 'express-validator';
+import Job from '../models/Job.js'; // <-- add `.js` and use import
 
-exports.createJob = async (req, res) => {
+export const createJob = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -15,12 +15,11 @@ exports.createJob = async (req, res) => {
   }
 };
 
-exports.updateJob = async (req, res) => {
+export const updateJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
 
-    // only admin or owner (employer who created the job) can update
     if (req.user.role !== 'admin' && job.createdBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Forbidden' });
     }
@@ -34,7 +33,7 @@ exports.updateJob = async (req, res) => {
   }
 };
 
-exports.deleteJob = async (req, res) => {
+export const deleteJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
@@ -51,9 +50,9 @@ exports.deleteJob = async (req, res) => {
   }
 };
 
-exports.getJobs = async (req, res) => {
+export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ isActive: true }).populate('createdBy', 'name email');
+    const jobs = await Job.find({}).populate('createdBy', 'name email');
     res.json(jobs);
   } catch (err) {
     console.error(err);
@@ -61,7 +60,7 @@ exports.getJobs = async (req, res) => {
   }
 };
 
-exports.getJob = async (req, res) => {
+export const getJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id).populate('createdBy', 'name email');
     if (!job) return res.status(404).json({ message: 'Job not found' });

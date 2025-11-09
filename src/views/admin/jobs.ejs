@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Job Listings</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <h1>Job Listings</h1>
+
+  <% if (jobs.length === 0) { %>
+    <p>No jobs found.</p>
+  <% } else { %>
+    <ul>
+      <% jobs.forEach(job => { %>
+        <li>
+          <img src="<%= job.companyLogo || '/images/default-logo.png' %>" alt="Logo" width="50" />
+          <strong><%= job.title %></strong> - <%= job.company %>
+          <br />
+          <a href="<%= job.applyLink %>" target="_blank">Apply Here</a>
+          <p><%= job.description %></p>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</body>
+</html>

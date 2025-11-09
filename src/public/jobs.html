@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Listings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9fafc;
+    }
+    .job {
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .job h2 {
+      margin: 0 0 10px;
+    }
+    .job img {
+      height: 50px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .apply {
+      display: inline-block;
+      padding: 8px 12px;
+      background: #0078ff;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Available Jobs</h1>
+  <div id="job-list"></div>
+
+  <script>
+    async function loadJobs() {
+      try {
+        const res = await fetch('/api/jobs');
+        const jobs = await res.json();
+        const container = document.getElementById('job-list');
+
+        if (jobs.length === 0) {
+          container.innerHTML = '<p>No jobs found.</p>';
+          return;
+        }
+
+      /*  container.innerHTML = jobs.map(job => `
+          <div class="job">
+            <h2>
+              ${job.companyLogo ? `<img src="${job.companyLogo}" alt="logo"/>` : ''}
+              ${job.title}
+            </h2>
+            <h4>${job.company} — ${job.location}</h4>
+            <p>${job.description.replace(/\n/g, '<br>')}</p>
+            ${job.salary ? `<p><strong>Salary:</strong> ${job.salary}</p>` : ''}
+            ${job.applyLink ? `<a class="apply" href="${job.applyLink}" target="_blank">Apply Now</a>` : ''}
+          </div>
+        `).join('');*/
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadJobs();
+  </script>
+</body>
+</html>
