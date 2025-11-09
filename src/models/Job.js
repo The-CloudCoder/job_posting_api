@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const jobSchema = new mongoose.Schema(
   {
@@ -13,10 +13,10 @@ const jobSchema = new mongoose.Schema(
       trim: true,
     },
     companyLogo: {
-      type: String, // URL to the logo image or uploaded file path
+      type: String, // URL to logo
     },
     description: {
-      type: String, // Supports HTML / Markdown
+      type: String, // can include HTML
       required: true,
     },
     location: {
@@ -31,11 +31,11 @@ const jobSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Job", jobSchema);
+module.exports = mongoose.model('Job', jobSchema);
