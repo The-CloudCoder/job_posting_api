@@ -1,12 +1,12 @@
-import { validationResult } from 'express-validator';
-import Job from '../models/Job.js'; // <-- add `.js` and use import
+const { validationResult } = require('express-validator');
+const Job = require('../models/Job');
 
-export const createJob = async (req, res) => {
+const createJob = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
   try {
-    const job = new Job({ ...req.body, createdBy: req.user._id });
+    const job = new Job({ ...req.body, createdBy: req.user?._id });
     await job.save();
     res.status(201).json(job);
   } catch (err) {
@@ -15,7 +15,7 @@ export const createJob = async (req, res) => {
   }
 };
 
-export const updateJob = async (req, res) => {
+const updateJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
@@ -33,7 +33,7 @@ export const updateJob = async (req, res) => {
   }
 };
 
-export const deleteJob = async (req, res) => {
+const deleteJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
@@ -50,7 +50,7 @@ export const deleteJob = async (req, res) => {
   }
 };
 
-export const getJobs = async (req, res) => {
+const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find({}).populate('createdBy', 'name email');
     res.json(jobs);
@@ -60,7 +60,7 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const getJob = async (req, res) => {
+const getJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id).populate('createdBy', 'name email');
     if (!job) return res.status(404).json({ message: 'Job not found' });
@@ -69,4 +69,12 @@ export const getJob = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+module.exports = {
+  createJob,
+  updateJob,
+  deleteJob,
+  getJobs,
+  getJob,
 };
